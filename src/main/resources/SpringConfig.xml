@@ -1,0 +1,52 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://www.springframework.org/schema/aop
+         http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+
+    <bean id="address" class="org.spring.Address" p:street="Gikalo" p:house="32"/>
+    <bean id="addressHome" class="org.spring.AddressHome" p:street="Home" p:house="1"/>
+
+    <bean id="person" class="org.spring.Person"
+          init-method="init" destroy-method="destroy" p:name="#{'Yulia'}" p:passport="#{5}">
+        <property name="stringList">
+            <list>
+                <value>42</value>
+                <value>49</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+<!--    <bean id="telegramSender" class="org.spring.TelegramSender" scope="prototype"/>-->
+
+<!--    <bean id="emailSender" class="org.spring.EmailSender"/>-->
+
+<!--    <bean id="senderService" class="org.spring.SenderService" p:sender-ref="emailSender"-->
+<!--          p:name="#{person.name}" p:pi="#{T(java.lang.Math).PI * 25 / 15}" >-->
+<!--        &lt;!&ndash;<constructor-arg name="sender"  ref="telegramSender"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;<property name="sender" ref="emailSender"/>&ndash;&gt;-->
+<!--    </bean>-->
+
+    <bean id="notifier" class="org.spring.Notifier"/>
+
+    <aop:config>
+        <aop:aspect id="note" ref="notifier">
+            <aop:pointcut id="advice" expression="execution(* *.sendMessage(*))"/>
+            <aop:after method="notifyAfter" pointcut-ref="advice"/>
+            <aop:before method="notifyBefore" pointcut-ref="advice"/>
+        </aop:aspect>
+    </aop:config>
+
+
+</beans>
